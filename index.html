@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Demo FTMS Treadmill Web Console</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <script type="text/javascript" src="js/ftms-rower.js"></script>
+</head>
+
+<body>
+    <h1>FTMS BLE Rower Display</h1>
+
+    <h2>Connect</h2>
+    <p><button id="bleConnectionButton">Connect FTMS BLE Rower</button></p>
+
+    <div class="cards">
+        <div class="card">
+            <div class="name">Pace</div>
+            <div class="unit" id="avg-pace">10:67</div>
+            <div class="value" id="pace">23:45</div>
+        </div>
+
+        <div class="card">
+            <div class="name">Stroke rate</div>
+            <div class="unit" id="tot-strokes">107</div>
+            <div class="value" id="stroke-rate">23.5</div>
+        </div>
+
+        <div class="card">
+            <div class="name">Power</div>
+            <div class="unit" id="avg-power">135</div>
+            <div class="value" id="power">23.45</div>
+        </div>
+
+        <div class="card">
+            <div class="name">Distance</div>
+            <div class="unit">m</div>
+            <div class="value" id="tot-distance">2340</div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+    function handleNotifications(event) {
+        let data = parseRowerData(event.target.value);
+
+        document.querySelector('#pace').textContent = data['Instantaneous Pace'];
+        document.querySelector('#avg-pace').textContent = data['Average Pace'];
+        document.querySelector('#tot-strokes').textContent = data['Stroke Count'];
+        document.querySelector('#stroke-rate').textContent = data['Stroke Rate'];
+        document.querySelector('#avg-power').textContent = data['Average Power'];
+        document.querySelector('#power').textContent = data['Instantaneous Power'];
+        document.querySelector('#tot-distance').textContent = data['Total Distance'];
+    }
+
+    function what() {
+        connect().then(characteristic =>
+            characteristic.addEventListener('characteristicvaluechanged', handleNotifications)
+        )
+    }
+
+    document.querySelector('#bleConnectionButton').addEventListener('click', what);
+
+
+</script>
+
+</html>
